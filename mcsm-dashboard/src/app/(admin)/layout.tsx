@@ -5,14 +5,12 @@ export const metadata: Metadata = {
   title: "Micro Clean (Admin)",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function AdminLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        {/**TODO: this should pull admin login status from auth not be hardcoded */}
-        <Header adminLogin={true} />
-        {children}
-      </body>
-    </html>
+    <>
+      {/**TODO: this should pull admin login status from auth not be hardcoded */}
+      <Header adminLogin={true} />
+      <main>{children}</main>
+    </>
   );
 }
