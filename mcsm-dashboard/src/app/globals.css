@@ -43,6 +43,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --spacing-header: var(--header-height);
+  --radius-lg: var(--radius);
 }
 
 body {

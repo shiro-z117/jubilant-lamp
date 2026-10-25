@@ -15,7 +15,7 @@ export default function Header({ adminLogin }: HeaderProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 flex h-header items-center gap-4 border-b border-border bg-card px-[max(5vw,1.5rem)]">
+    <header className="sticky top-0 z-50 flex h-header items-center gap-4 border-b border-border bg-card px-[max(5vw,1.5rem)] shadow-sm mb-8">
       {adminLogin && (
         <>
           <button
@@ -36,21 +36,21 @@ export default function Header({ adminLogin }: HeaderProps) {
           <Sidebar open={open} onClose={() => setOpen(false)} />
         </>
       )}
-      <Link className="brand" href="/" aria-label="Home">
+      <Link className="shrink-0" href="/" aria-label="Home">
         <Image
           loading="eager"
           src={logo}
           alt="Micro Clean Cleaning Services"
-          className={`h-28 w-auto ${adminLogin ? "ml-12" : ""}`}
+          className={`h-28 w-42 ${adminLogin ? "ml-8" : ""}`}
         />
       </Link>
-      <div className="header-note ml-auto text-muted-foreground">
-        Logged in as a{adminLogin ? "n Admin" : " Staff"}
+      <div className="ml-auto mr-8 text-muted-foreground">
+        Logged in as a{adminLogin ? "n Admin" : " Cleaning Staff"}
       </div>
       {/**TODO: make the logout button functional */}
       <button
         aria-label="Log out"
-        className="ml-6 cursor-pointer rounded-md border-2 border-destructive p-2 text-destructive"
+        className="cursor-pointer rounded-md border-2 border-destructive p-2 text-destructive"
       >
         <LogOut size={30} aria-hidden="true" />
       </button>
