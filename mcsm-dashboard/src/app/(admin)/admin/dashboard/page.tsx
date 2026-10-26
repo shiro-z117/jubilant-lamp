@@ -5,7 +5,7 @@ import {
   BookCheck,
   Check,
   DollarSign,
-  PersonStanding,
+  Users,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
       <KpiCard
         label={"Active Cleaning Staff"}
         value={"value"}
-        icon={PersonStanding}
+        icon={Users}
         hint={"hint"}
       />
       /admin/dashboard
