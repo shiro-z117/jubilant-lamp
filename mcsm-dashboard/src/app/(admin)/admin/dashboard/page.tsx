@@ -47,10 +47,6 @@ export default function AdminDashboard() {
         icon={Users}
         hint={"hint"}
       />
-      /admin/dashboard
-      <div
-        style={{ width: "10rem", height: "100rem", backgroundColor: "blue" }}
-      />
     </div>
   );
 }
