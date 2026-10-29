@@ -1,21 +1,200 @@
 // use prisma-8
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+enum Role {
+  @@type("pg/text@1")
+  admin = "admin"
+  staff = "staff"
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+enum StaffStatus {
+  @@type("pg/text@1")
+  Available = "Available"
+  Assigned  = "Assigned"
+  Busy      = "Busy"
+  Offline   = "Offline"
+}
+
+model User {
+  id           String             @id @onCreate(uuid())
+  name         String
+  email        String             @unique
+  passwordHash String
+  role         Role
+  createdAt    TimestamptzJsDate  @default(now())
+  staff        Staff?
+  notifications MCNotification[]
+}
+
+model Staff {
+  id              String   @id @onCreate(uuid())
+  phone           String
+  avatar          String?
+  skills          String[]
+  experienceYears Int
+  availability    String[]
+  rating          Float
+  completedJobs   Int
+  status          StaffStatus
+  isActive        Boolean
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id])
+  assignments BookingAssignment[]
+}
+
+model Customer {
+  id      String @id @onCreate(uuid())
+  name    String
+  email   String
+  phone   String
+  address String
+  bookings Booking[]
+}
+
+enum BookingStatus {
+  @@type("pg/text@1")
+  Pending    = "Pending"
+  Quoted     = "Quoted"
+  Confirmed  = "Confirmed"
+  InProgress = "In Progress"
+  Completed  = "Completed"
+  Cancelled  = "Cancelled"
+  Rejected   = "Rejected"
+}
+
+enum AssignmentStatus {
+  @@type("pg/text@1")
+  Assigned = "Assigned"
+  Accepted = "Accepted"
+  OnTheWay = "On the Way"
+  Rejected = "Rejected"
+}
+
+model Booking {
+  id            String              @id
+  customerId    String
+  serviceIds    String[]
+  scheduledAt   TimestamptzJsDate
+  address       String
+  propertySize  Int
+  accessNotes   String?
+  specialNotes  String?
+  pets          Boolean
+  status        BookingStatus
+  createdAt     TimestamptzJsDate   @default(now())
+  customer      Customer            @relation(fields: [customerId], references: [id])
+  assignments   BookingAssignment[]
+  statusHistory StatusHistory[]
+  quotations Quotation[]
+  payments Payment[]
+  notifications MCNotification[]
+}
+
+model BookingAssignment {
+  bookingId String
+  staffId   String
+  status    AssignmentStatus
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  staff     Staff   @relation(fields: [staffId], references: [id])
+
+  @@id([bookingId, staffId])
+}
+
+model StatusHistory {
+  id        String            @id @onCreate(uuid())
+  bookingId String
+  status    BookingStatus
+  changedAt TimestamptzJsDate @default(now())
+  changedBy String
+  note      String?
+  booking   Booking           @relation(fields: [bookingId], references: [id])
+}
+
+enum QuotationStatus {
+  @@type("pg/text@1")
+  Draft    = "Draft"
+  Sent     = "Sent"
+  Accepted = "Accepted"
+  Rejected = "Rejected"
+  Expired  = "Expired"
+}
+
+enum PaymentMethod {
+  @@type("pg/text@1")
+  Card         = "Card"
+  Cash         = "Cash"
+  BankTransfer = "Bank Transfer"
+}
+
+enum PaymentStatus {
+  @@type("pg/text@1")
+  Pending  = "Pending"
+  Paid     = "Paid"
+  Failed   = "Failed"
+  Refunded = "Refunded"
+}
+
+enum NotificationType {
+  @@type("pg/text@1")
+  BookingRequested = "BookingRequested"
+  QuoteAccepted    = "QuoteAccepted"
+  PaymentReceived  = "PaymentReceived"
+  StaffAccepted    = "StaffAccepted"
+  StaffRejected    = "StaffRejected"
+  BookingCompleted = "BookingCompleted"
+  BookingCancelled = "BookingCancelled"
+}
+
+model Quotation {
+  id        String            @id @onCreate(uuid())
+  bookingId String
+  token     String            @unique
+  discount  Int
+  taxRate   Float
+  total     Int
+  expiresAt TimestamptzJsDate
+  notes     String?
+  status    QuotationStatus
+  createdAt TimestamptzJsDate @default(now())
+  booking   Booking           @relation(fields: [bookingId], references: [id])
+  services  QuoteServiceLine[]
+  addOns    QuoteAddOn[]
+}
+
+model QuoteServiceLine {
+  id          String    @id @onCreate(uuid())
+  quotationId String
+  serviceId   String
+  price       Int
+  quotation   Quotation @relation(fields: [quotationId], references: [id])
+}
+
+model QuoteAddOn {
+  id          String    @id @onCreate(uuid())
+  quotationId String
+  description String
+  amount      Int
+  quotation   Quotation @relation(fields: [quotationId], references: [id])
+}
+
+model Payment {
+  id        String            @id @onCreate(uuid())
+  bookingId String
+  amount    Int
+  method    PaymentMethod
+  status    PaymentStatus
+  paidAt    TimestamptzJsDate?
+  createdAt TimestamptzJsDate @default(now())
+  booking   Booking           @relation(fields: [bookingId], references: [id])
+}
+
+model MCNotification {
+  id        String            @id @onCreate(uuid())
+  userId    String
+  type      NotificationType
+  bookingId String
+  message   String
+  isRead    Boolean
+  createdAt TimestamptzJsDate @default(now())
+  user      User              @relation(fields: [userId], references: [id])
+  booking   Booking           @relation(fields: [bookingId], references: [id])
 }
