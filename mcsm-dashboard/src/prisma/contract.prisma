@@ -55,6 +55,7 @@ enum BookingStatus {
   Pending    = "Pending"
   Quoted     = "Quoted"
   Confirmed  = "Confirmed"
+  Assigned   = "Assigned"
   InProgress = "In Progress"
   Completed  = "Completed"
   Cancelled  = "Cancelled"
@@ -83,6 +84,7 @@ model Booking {
   createdAt     TimestamptzJsDate   @default(now())
   customer      Customer            @relation(fields: [customerId], references: [id])
   assignments   BookingAssignment[]
+  staffRequired Int @default(1)
   statusHistory StatusHistory[]
   quotations Quotation[]
   payments Payment[]

@@ -2,9 +2,10 @@ type BookingStatus =
     | "Pending"
     | "Quoted"
     | "Confirmed"
+    | "Assigned"
     | "In Progress"
     | "Completed"
-    | "Cancelled"
+    | "Cancelled" // Cancelled represents that the customer has cancelled the booking (typically via declining their quote)
     | "Rejected"; // Rejected represents that an admin has rejected the customer's request
 
 type StatusHistoryEntry = {
@@ -27,6 +28,7 @@ export type Booking = {
     customerId: string;
     serviceIds: string[]; // references Service.id from the service types; array should never be empty
     assignments: BookingAssignment[]; // empty means no one is assigned
+    staffRequired: number; // how many staff are needed for this booking; default 1
     scheduledAt: string; // ISO date-time
     address: string;
     propertySize: number; // by square feet

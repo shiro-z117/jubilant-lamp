@@ -14,7 +14,7 @@ const DEMO_PASSWORD = "Demo1234!";
 const DAY = 24 * 60 * 60 * 1000;
 const HOUR = 60 * 60 * 1000;
 
-type BStatus = "Pending" | "Quoted" | "Confirmed" | "In Progress" | "Completed" | "Cancelled" | "Rejected";
+type BStatus = "Pending" | "Quoted" | "Confirmed" | "Assigned" | "In Progress" | "Completed" | "Cancelled" | "Rejected";
 type PStatus = "Pending" | "Paid" | "Failed" | "Refunded";
 type Method = "Card" | "Cash" | "Bank Transfer";
 
@@ -29,6 +29,7 @@ type Spec = {
     status: BStatus;
     staff: number[];
     assignment?: "Assigned" | "Accepted";
+    staffRequired?: number;
     pay?: PStatus;
     method?: Method;
     discount?: number;
@@ -37,7 +38,7 @@ type Spec = {
 
 const SPECS: Spec[] = [
     // today's operations
-    { day: 0, hour: 9, customer: 0, services: ["basic"], size: 900, status: "Confirmed", staff: [0], assignment: "Accepted" },
+    { day: 0, hour: 9, customer: 0, services: ["basic"], size: 900, status: "Assigned", staff: [0], assignment: "Accepted" },
     { day: 0, hour: 11, min: 30, customer: 1, services: ["deep"], size: 1500, status: "In Progress", staff: [1], assignment: "Accepted", pay: "Pending", method: "Cash" },
     {
         day: 0, hour: 14, customer: 2, services: ["sofa", "mattress"], size: 1100, status: "Confirmed", staff: [2], assignment: "Assigned",
@@ -49,7 +50,7 @@ const SPECS: Spec[] = [
     // past
     { day: -2, hour: 10, customer: 3, services: ["basic"], size: 800, status: "Completed", staff: [0], assignment: "Accepted", pay: "Paid", method: "Card" },
     {
-        day: -5, hour: 13, customer: 4, services: ["deep", "mattress"], size: 1800, status: "Completed", staff: [1, 2], assignment: "Accepted", pay: "Paid", method: "Card", discount: 1000,
+        day: -5, hour: 13, customer: 4, services: ["deep", "mattress"], size: 1800, status: "Completed", staff: [1, 2], assignment: "Accepted", staffRequired: 2, pay: "Paid", method: "Card", discount: 1000,
         addOns: [
             { description: "Window Cleaning", amount: 2000 },
             { description: "Inside Oven", amount: 500 },
@@ -79,6 +80,7 @@ const SPECS: Spec[] = [
     { day: 5, hour: 13, customer: 1, services: ["move-in"], size: 1400, status: "Quoted", staff: [] },
     { day: 10, hour: 9, customer: 5, services: ["basic", "sofa"], size: 1000, status: "Confirmed", staff: [], pay: "Failed", method: "Card" },
     { day: 20, hour: 11, customer: 3, services: ["other"], size: 700, status: "Rejected", staff: [] },
+    { day: 50, hour: 10, customer: 0, services: ["basic"], size: 900, status: "Assigned", staff: [1, 2, 3], assignment: "Assigned", staffRequired: 2, pay: "Pending", method: "Cash" },
 ];
 
 // statuses a booking has passed through, in order (provides a status history)
@@ -86,13 +88,14 @@ const CHAIN: Record<BStatus, BStatus[]> = {
     Pending: ["Pending"],
     Quoted: ["Pending", "Quoted"],
     Confirmed: ["Pending", "Quoted", "Confirmed"],
-    "In Progress": ["Pending", "Quoted", "Confirmed", "In Progress"],
-    Completed: ["Pending", "Quoted", "Confirmed", "In Progress", "Completed"],
+    Assigned: ["Pending", "Quoted", "Confirmed", "Assigned"],
+    "In Progress": ["Pending", "Quoted", "Confirmed", "Assigned", "In Progress"],
+    Completed: ["Pending", "Quoted", "Confirmed", "Assigned", "In Progress", "Completed"],
     Cancelled: ["Pending", "Quoted", "Confirmed", "Cancelled"],
     Rejected: ["Pending", "Rejected"],
 };
 
-const HAS_QUOTE: BStatus[] = ["Quoted", "Confirmed", "In Progress", "Completed", "Cancelled"];
+const HAS_QUOTE: BStatus[] = ["Quoted", "Confirmed", "In Progress", "Assigned", "Completed", "Cancelled"];
 
 // converts staff names into email addresses
 const slug = (n: string) => n.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
@@ -204,6 +207,7 @@ async function main() {
             Pending: created,
             Quoted: new Date(created.getTime() + 12 * HOUR),
             Confirmed: new Date(created.getTime() + 48 * HOUR),
+            Assigned: new Date(created.getTime() + 51 * HOUR),
             "In Progress": scheduled,
             Completed: new Date(scheduled.getTime() + 3 * HOUR),
             Cancelled: new Date(created.getTime() + 72 * HOUR),
@@ -211,13 +215,14 @@ async function main() {
         };
         const staffName = spec.staff.length ? staffSeeds[spec.staff[0]].name : "Admin";
         const changedBy: Record<BStatus, string> = {
-            Pending: "Customer",
+            Pending: "Admin",
             Quoted: "Admin",
-            Confirmed: "Customer",
+            Confirmed: "System",
+            Assigned: "System",
             "In Progress": staffName,
             Completed: staffName,
             Cancelled: "Admin",
-            Rejected: "Admin",
+            Rejected: "System",
         };
 
         await db.orm.public.Booking.create({
@@ -232,6 +237,7 @@ async function main() {
             pets: i % 5 === 0,
             status: spec.status,
             createdAt: created,
+            staffRequired: spec.staffRequired ?? 1,
         });
 
         await db.orm.public.StatusHistory.createAll(

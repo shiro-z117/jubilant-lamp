@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'fcdabbed901606696cfc3f6a18286fdd414e0b3450ef234001b37cf2a39c2a09'>;
+  StorageHashBase<'a6e1c763f5129426bef2b00b91d728c5a27704a9d78deeab666876a3486bf463'>;
 export type ExecutionHash =
   ExecutionHashBase<'3c2d4275b8e74de0bb93e66d69bb9b9cca5d632d2ffa8445ddd34f79c683a39d'>;
 export type ProfileHash =
@@ -279,6 +279,7 @@ type FieldTypeOverrides = {
             | 'Pending'
             | 'Quoted'
             | 'Confirmed'
+            | 'Assigned'
             | 'In Progress'
             | 'Completed'
             | 'Cancelled'
@@ -287,6 +288,7 @@ type FieldTypeOverrides = {
             | 'Pending'
             | 'Quoted'
             | 'Confirmed'
+            | 'Assigned'
             | 'In Progress'
             | 'Completed'
             | 'Cancelled'
@@ -347,6 +349,7 @@ type FieldTypeOverrides = {
             | 'Pending'
             | 'Quoted'
             | 'Confirmed'
+            | 'Assigned'
             | 'In Progress'
             | 'Completed'
             | 'Cancelled'
@@ -355,6 +358,7 @@ type FieldTypeOverrides = {
             | 'Pending'
             | 'Quoted'
             | 'Confirmed'
+            | 'Assigned'
             | 'In Progress'
             | 'Completed'
             | 'Cancelled'
@@ -389,6 +393,7 @@ type ColumnTypeOverrides = {
           | 'Pending'
           | 'Quoted'
           | 'Confirmed'
+          | 'Assigned'
           | 'In Progress'
           | 'Completed'
           | 'Cancelled'
@@ -397,6 +402,7 @@ type ColumnTypeOverrides = {
           | 'Pending'
           | 'Quoted'
           | 'Confirmed'
+          | 'Assigned'
           | 'In Progress'
           | 'Completed'
           | 'Cancelled'
@@ -457,6 +463,7 @@ type ColumnTypeOverrides = {
           | 'Pending'
           | 'Quoted'
           | 'Confirmed'
+          | 'Assigned'
           | 'In Progress'
           | 'Completed'
           | 'Cancelled'
@@ -465,6 +472,7 @@ type ColumnTypeOverrides = {
           | 'Pending'
           | 'Quoted'
           | 'Confirmed'
+          | 'Assigned'
           | 'In Progress'
           | 'Completed'
           | 'Cancelled'
@@ -503,6 +511,7 @@ export namespace Models {
     scheduledAt: FieldOutputTypes['public']['Booking']['scheduledAt'];
     serviceIds: FieldOutputTypes['public']['Booking']['serviceIds'];
     specialNotes: FieldOutputTypes['public']['Booking']['specialNotes'];
+    staffRequired: FieldOutputTypes['public']['Booking']['staffRequired'];
     status: FieldOutputTypes['public']['Booking']['status'];
     assignments: public_BookingAssignment[];
     customer: public_Customer;
@@ -719,6 +728,16 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly staffRequired: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 1>;
+                  };
                   readonly many: false;
                 };
                 readonly status: {
@@ -1417,6 +1436,7 @@ type ContractBase = Omit<
                 'Pending',
                 'Quoted',
                 'Confirmed',
+                'Assigned',
                 'In Progress',
                 'Completed',
                 'Cancelled',
@@ -1546,6 +1566,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly staffRequired: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
               readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1634,6 +1658,7 @@ type ContractBase = Omit<
                 readonly scheduledAt: { readonly column: 'scheduledAt' };
                 readonly serviceIds: { readonly column: 'serviceIds' };
                 readonly specialNotes: { readonly column: 'specialNotes' };
+                readonly staffRequired: { readonly column: 'staffRequired' };
                 readonly status: { readonly column: 'status' };
               };
             };
@@ -2294,6 +2319,7 @@ type ContractBase = Omit<
               { readonly name: 'Pending'; readonly value: 'Pending' },
               { readonly name: 'Quoted'; readonly value: 'Quoted' },
               { readonly name: 'Confirmed'; readonly value: 'Confirmed' },
+              { readonly name: 'Assigned'; readonly value: 'Assigned' },
               { readonly name: 'InProgress'; readonly value: 'In Progress' },
               { readonly name: 'Completed'; readonly value: 'Completed' },
               { readonly name: 'Cancelled'; readonly value: 'Cancelled' },
@@ -2367,6 +2393,7 @@ type ContractBase = Omit<
             { readonly name: 'Pending'; readonly value: 'Pending' },
             { readonly name: 'Quoted'; readonly value: 'Quoted' },
             { readonly name: 'Confirmed'; readonly value: 'Confirmed' },
+            { readonly name: 'Assigned'; readonly value: 'Assigned' },
             { readonly name: 'InProgress'; readonly value: 'In Progress' },
             { readonly name: 'Completed'; readonly value: 'Completed' },
             { readonly name: 'Cancelled'; readonly value: 'Cancelled' },

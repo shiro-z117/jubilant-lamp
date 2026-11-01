@@ -90,6 +90,10 @@
                 "value": "Confirmed"
               },
               {
+                "name": "Assigned",
+                "value": "Assigned"
+              },
+              {
                 "name": "InProgress",
                 "value": "In Progress"
               },
@@ -314,6 +318,13 @@
                   "kind": "scalar"
                 }
               },
+              "staffRequired": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "status": {
                 "nullable": false,
                 "type": {
@@ -452,6 +463,9 @@
                 },
                 "specialNotes": {
                   "column": "specialNotes"
+                },
+                "staffRequired": {
+                  "column": "staffRequired"
                 },
                 "status": {
                   "column": "status"
@@ -1533,8 +1547,8 @@
                   "prefix": "Booking_serviceIds_elem_not_null"
                 },
                 {
-                  "expression": "\"status\" IN ('Pending', 'Quoted', 'Confirmed', 'In Progress', 'Completed', 'Cancelled', 'Rejected')",
-                  "name": "Booking_status_check_3983182e",
+                  "expression": "\"status\" IN ('Pending', 'Quoted', 'Confirmed', 'Assigned', 'In Progress', 'Completed', 'Cancelled', 'Rejected')",
+                  "name": "Booking_status_check_0bd5602d",
                   "prefix": "Booking_status_check"
                 }
               ],
@@ -1595,6 +1609,15 @@
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": true
+                },
+                "staffRequired": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "kind": "literal",
+                    "value": 1
+                  },
+                  "nullable": false
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -2367,8 +2390,8 @@
             "StatusHistory": {
               "checks": [
                 {
-                  "expression": "\"status\" IN ('Pending', 'Quoted', 'Confirmed', 'In Progress', 'Completed', 'Cancelled', 'Rejected')",
-                  "name": "StatusHistory_status_check_3983182e",
+                  "expression": "\"status\" IN ('Pending', 'Quoted', 'Confirmed', 'Assigned', 'In Progress', 'Completed', 'Cancelled', 'Rejected')",
+                  "name": "StatusHistory_status_check_0bd5602d",
                   "prefix": "StatusHistory_status_check"
                 }
               ],
@@ -2534,6 +2557,7 @@
                 "Pending",
                 "Quoted",
                 "Confirmed",
+                "Assigned",
                 "In Progress",
                 "Completed",
                 "Cancelled",
@@ -2601,7 +2625,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "fcdabbed901606696cfc3f6a18286fdd414e0b3450ef234001b37cf2a39c2a09"
+    "storageHash": "a6e1c763f5129426bef2b00b91d728c5a27704a9d78deeab666876a3486bf463"
   },
   "execution": {
     "executionHash": "3c2d4275b8e74de0bb93e66d69bb9b9cca5d632d2ffa8445ddd34f79c683a39d",
