@@ -1,5 +1,4 @@
-// TODO: uncomment the line below
-// import "server-only";
+import "server-only";
 import bcrypt from "bcryptjs";
 
 // used for new passwords made via forgot password, and for when new cleaners are created by an admin
