@@ -23,6 +23,17 @@ type BookingAssignment = {
     status: AssignmentStatus;
 };
 
+/**
+ * bookings are directly related to the following types:
+ * Customer (customerId)
+ * Service (serviceIds)
+ * Staff (assignments)
+ *
+ * these types are related to bookings, but not directly:
+ * MCNotification
+ * Quotation
+ * Payment
+ */
 export type Booking = {
     id: string;
     customerId: string;

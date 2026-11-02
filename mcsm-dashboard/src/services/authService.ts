@@ -5,7 +5,7 @@ import { db } from "@/prisma/db";
 
 type Role = "admin" | "staff";
 
-type Session = {
+export type Session = {
     userId: string;
     role: Role;
     staffId: string | null; // null for admins

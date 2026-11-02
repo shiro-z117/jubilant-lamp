@@ -1,7 +1,7 @@
 import assert from "node:assert";
-import { assertTransition, allowedNext } from "../lib/bookingStatus";
+import { assertTransition, allowedNext } from "../src/lib/bookingStatus";
 
-// run via npx tsx src/tests/testBookingStatus.ts
+// run via npx tsx tests/testBookingStatus.ts
 
 // should NOT throw
 assert.strictEqual(assertTransition("Pending", "Quoted", "admin"), null);
