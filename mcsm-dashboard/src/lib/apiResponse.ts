@@ -75,7 +75,7 @@ export class ConflictError extends ApiError {
     }
 }
 
-// #endregion
+// #endregion ERRORS
 
 // #region RESPONSE HELPERS
 
@@ -116,7 +116,7 @@ function toErrorResponse(error: unknown) {
     return fail("INTERNAL", "Something went wrong");
 }
 
-// #endregion
+// #endregion RESPONSE HELPERS
 
 // a wrapper so that try/catch blocks aren't needed for every api method and also sends caught errors through toErrorResponse
 // example usage: export const GET = handle(async (request, context) => { ...; return ok(data); });
