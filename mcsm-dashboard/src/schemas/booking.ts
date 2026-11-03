@@ -15,3 +15,19 @@ export const listBookingsSchema = z.object({
 });
 
 export type ListBookingsFilters = z.infer<typeof listBookingsSchema>;
+
+export const rescheduleSchema = z.object({
+    scheduledAt: z.coerce.date(),
+});
+
+export const changeStatusSchema = z.object({
+    status: bookingStatusSchema,
+});
+
+export const assignStaffSchema = z.object({
+    staffIds: z.array(z.string()).min(1, "Pick at least one staff member"),
+});
+
+export const setStaffRequiredSchema = z.object({
+    count: z.coerce.number().int().min(1),
+});

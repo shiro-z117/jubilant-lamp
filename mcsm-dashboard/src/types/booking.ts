@@ -1,8 +1,8 @@
 type BookingStatus =
     | "Pending"
     | "Quoted"
-    | "Confirmed"
-    | "Assigned"
+    | "Confirmed" // the client has accepted their quote, the booking is now confirmed and pending for staff assignment
+    | "Assigned" // if the requisite number of staff (staffRequired) have accepted their assignment for this booking, it is automatically changed to Assigned
     | "In Progress"
     | "Completed"
     | "Cancelled" // Cancelled represents that the customer has cancelled the booking (typically via declining their quote)
