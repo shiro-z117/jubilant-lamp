@@ -1,5 +1,5 @@
 import { db, type Tx } from "@/prisma/db";
-import { or } from "@prisma/orm-postgres/orm-client";
+import { and, or } from "@prisma/orm-postgres/orm-client";
 import { ConflictError, ForbiddenError, NotFoundError } from "@/lib/apiResponse";
 import { assertTransition } from "@/lib/bookingStatus";
 import { notifyAdmins } from "@/services/notificationService";
@@ -45,7 +45,7 @@ async function loadBooking(tx: Tx, bookingId: string) {
 
 // the status "Assigned" indicates that enough staff (staffRequired) have accepted to work on a particular booking
 // unassigning staff who have accepted an assignment, or changing the staffRequired value can render the Assigned status invalid
-// this function solves that by reverting a booking's status back to "Confirmed" if "Assigned" is no longer valid
+// this function solves that by reverting a booking's status back to "Confirmed" if "Assigned" is no longer valid (should be called ANYWHERE that "Assigned" can be rendered invalid)
 async function revertIfUnderstaffed(tx: Tx, bookingId: string, name: string) {
     const booking = await loadBooking(tx, bookingId);
     if (booking.status !== "Assigned") return;
@@ -70,8 +70,19 @@ export async function listBookings(filters: ListBookingsFilters, session: Sessio
 
     if (status) query = query.where((b) => b.status.eq(status));
     if (startDate) query = query.where((b) => b.scheduledAt.gte(startDate));
-    if (endDate) query = query.where((b) => b.scheduledAt.lte(endDate));
-    if (staffId) query = query.where((b) => b.assignments.some((a) => a.staffId.eq(staffId)));
+    if (endDate) {
+        // end date should be inclusive, not exclusive (start date is automatically inclusive)
+        const end = new Date(endDate);
+        if (end.getTime() % 86_400_000 === 0) end.setUTCHours(23, 59, 59, 999);
+        query = query.where((b) => b.scheduledAt.lte(end));
+    }
+    if (staffId) {
+        query = query.where((b) =>
+            b.assignments.some((a) =>
+                session.role === "staff" ? and(a.staffId.eq(staffId), a.status.neq("Rejected")) : a.staffId.eq(staffId)
+            )
+        );
+    }
 
     if (search) {
         const pattern = likePattern(search);
@@ -106,7 +117,8 @@ export async function getBooking(bookingId: string, session: Session) {
         .include("payments")
         .first();
     if (!booking) throw new NotFoundError("Booking not found");
-    const services = booking.serviceIds.map((id) => getServiceById(id));
+    // flatmap functionally clears out invalid service types if one was somehow entered
+    const services = booking.serviceIds.flatMap((id) => getServiceById(id) ?? []);
 
     // staff may only open bookings they are assigned to and haven't rejected
     if (session.role === "staff") {
@@ -121,22 +133,21 @@ export async function getBooking(bookingId: string, session: Session) {
 
 // #region WRITE OPERATIONS
 
-export async function rescheduleBooking(bookingId: string, scheduledAt: Date, session: Session) {
+export async function rescheduleBooking(bookingId: string, scheduledAt: Date, session: Session): Promise<void> {
     assertAdmin(session);
-    return db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
         const booking = await loadBooking(tx, bookingId);
         if (!EDITABLE.includes(booking.status)) {
             throw new ConflictError(`A ${booking.status} booking can no longer be rescheduled`);
         }
         if (scheduledAt.getTime() === booking.scheduledAt.getTime()) return booking; // nothing to change
 
-        const updated = await tx.orm.public.Booking.where({ id: bookingId }).update({ scheduledAt });
+        await tx.orm.public.Booking.where({ id: bookingId }).update({ scheduledAt });
         const by = await nameOf(tx, session.userId);
         await addHistory(
             tx, bookingId, booking.status, by,
             `Rescheduled: ${booking.scheduledAt.toISOString()} -> ${scheduledAt.toISOString()}`
         );
-        return updated;
     });
 }
 
