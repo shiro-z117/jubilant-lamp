@@ -4,7 +4,7 @@ import { listBookings, getBooking } from "../src/services/bookingService";
 import { listBookingsSchema } from "../src/schemas/booking";
 import { NotFoundError, ForbiddenError } from "../src/lib/apiResponse";
 
-// run via npx tsx tests/testBookingService.ts
+// run via npx tsx tests/testBookingServiceReads.ts
 
 // parse() applies the defaults (page 1, limit 20), like a route would
 const filters = (input: Record<string, unknown> = {}) => listBookingsSchema.parse(input);
