@@ -7,6 +7,7 @@ import type { Session } from "@/services/authService";
 import type { Booking } from "@/types/booking";
 import type { ListBookingsFilters } from "@/schemas/booking";
 import { getServiceById } from "@/lib/services";
+import { assertAdmin, likePattern, nameOf } from "@/lib/serviceHelpers";
 
 const NEEDS_ACCEPTED_QUOTE: Status[] = ["Confirmed", "Assigned", "In Progress", "Completed"];
 const EDITABLE: Status[] = ["Pending", "Quoted", "Confirmed", "Assigned"];
@@ -14,20 +15,6 @@ const ASSIGNABLE: Status[] = ["Confirmed", "Assigned"];
 
 type Status = Booking["status"];
 type Actor = Parameters<typeof assertTransition>[2];
-
-async function nameOf(tx: Tx, userId: string): Promise<string> {
-    const user = await tx.orm.public.User.first({ id: userId });
-    return user?.name ?? "Unknown";
-}
-
-// escapes % and _ so that search queries containing them don't do anything weird with the LIKE operator
-function likePattern(text: string): string {
-    return `%${text.replace(/[\\%_]/g, "\\$&")}%`;
-}
-
-function assertAdmin(session: Session) {
-    if (session.role !== "admin") throw new ForbiddenError("Only admins can do this");
-}
 
 async function addHistory(tx: Tx, bookingId: string, status: Status, changedBy: string, note: string | null = null) {
     await tx.orm.public.StatusHistory.create({ bookingId, status, changedBy, note });

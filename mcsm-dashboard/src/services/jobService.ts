@@ -4,16 +4,12 @@ import { applyStatusChange, getBooking, listBookings, syncAssignedStatus } from 
 import { notifyAdmins } from "@/services/notificationService";
 import type { Session } from "@/services/authService";
 import { getServiceById } from "@/lib/services";
+import { nameOf } from "@/lib/serviceHelpers";
 
 // every function here is for staff only; returns the caller's Staff id
 function requireStaff(session: Session): string {
     if (session.role !== "staff" || !session.staffId) throw new ForbiddenError("Staff only");
     return session.staffId;
-}
-
-async function nameOf(tx: Tx, userId: string): Promise<string> {
-    const user = await tx.orm.public.User.first({ id: userId });
-    return user?.name ?? "Unknown";
 }
 
 // the booking plus this staff member's own assignment on it

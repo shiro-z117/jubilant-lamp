@@ -1,21 +1,13 @@
 import { randomBytes } from "node:crypto";
-import { db, type Tx } from "@/prisma/db";
-import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from "@/lib/apiResponse";
+import { db } from "@/prisma/db";
+import { BadRequestError, ConflictError, NotFoundError } from "@/lib/apiResponse";
 import { calculateQuote } from "@/lib/calculateQuote";
 import { getServiceById } from "@/lib/services";
 import { applyStatusChange } from "@/services/bookingService";
 import { notifyAdmins } from "@/services/notificationService";
 import type { Session } from "@/services/authService";
 import type { CreateQuotationInput } from "@/schemas/quotation";
-
-function assertAdmin(session: Session) {
-    if (session.role !== "admin") throw new ForbiddenError("Only admins can do this");
-}
-
-async function nameOf(tx: Tx, userId: string): Promise<string> {
-    const user = await tx.orm.public.User.first({ id: userId });
-    return user?.name ?? "Unknown";
-}
+import { assertAdmin, nameOf } from "@/lib/serviceHelpers";
 
 // a Sent quote past its expiry date counts as Expired, even if the stored status hasn't been updated yet
 function effectiveStatus(q: { status: string; expiresAt: Date }): string {
