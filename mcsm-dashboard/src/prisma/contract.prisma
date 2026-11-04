@@ -33,7 +33,6 @@ model Staff {
   experienceYears Int
   availability    String[]
   rating          Float
-  completedJobs   Int
   status          StaffStatus
   isActive        Boolean
   userId          String   @unique

@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'c91d7432e0fd2c10a37871243e58a6a144c2c27c9ac714e71dd27b77cd4bcf95'>;
+  StorageHashBase<'4308f01dcad11b07db609a117d9d76874f49d483841600add8cf03abf178ca17'>;
 export type ExecutionHash =
   ExecutionHashBase<'3c2d4275b8e74de0bb93e66d69bb9b9cca5d632d2ffa8445ddd34f79c683a39d'>;
 export type ProfileHash =
@@ -597,7 +597,6 @@ export namespace Models {
   export type public_Staff = {
     availability: FieldOutputTypes['public']['Staff']['availability'];
     avatar: FieldOutputTypes['public']['Staff']['avatar'];
-    completedJobs: FieldOutputTypes['public']['Staff']['completedJobs'];
     experienceYears: FieldOutputTypes['public']['Staff']['experienceYears'];
     id: FieldOutputTypes['public']['Staff']['id'];
     isActive: FieldOutputTypes['public']['Staff']['isActive'];
@@ -1239,12 +1238,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
-                  readonly many: false;
-                };
-                readonly completedJobs: {
-                  readonly dataType: 'pg/int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
                   readonly many: false;
                 };
                 readonly experienceYears: {
@@ -2099,10 +2092,6 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly completedJobs: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
               readonly experienceYears: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -2165,7 +2154,6 @@ type ContractBase = Omit<
               readonly fields: {
                 readonly availability: { readonly column: 'availability' };
                 readonly avatar: { readonly column: 'avatar' };
-                readonly completedJobs: { readonly column: 'completedJobs' };
                 readonly experienceYears: { readonly column: 'experienceYears' };
                 readonly id: { readonly column: 'id' };
                 readonly isActive: { readonly column: 'isActive' };

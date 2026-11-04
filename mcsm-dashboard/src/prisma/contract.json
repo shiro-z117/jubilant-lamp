@@ -1177,13 +1177,6 @@
                   "kind": "scalar"
                 }
               },
-              "completedJobs": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
               "experienceYears": {
                 "nullable": false,
                 "type": {
@@ -1290,9 +1283,6 @@
                 },
                 "avatar": {
                   "column": "avatar"
-                },
-                "completedJobs": {
-                  "column": "completedJobs"
                 },
                 "experienceYears": {
                   "column": "experienceYears"
@@ -2291,11 +2281,6 @@
                   "dataType": "pg/text",
                   "nullable": true
                 },
-                "completedJobs": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
                 "experienceYears": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
@@ -2620,7 +2605,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "c91d7432e0fd2c10a37871243e58a6a144c2c27c9ac714e71dd27b77cd4bcf95"
+    "storageHash": "4308f01dcad11b07db609a117d9d76874f49d483841600add8cf03abf178ca17"
   },
   "execution": {
     "executionHash": "3c2d4275b8e74de0bb93e66d69bb9b9cca5d632d2ffa8445ddd34f79c683a39d",

@@ -154,10 +154,6 @@ async function main() {
         { name: `${faker.person.firstName()} ${faker.person.lastName()}`, skills: ["sofa", "mattress", "basic"], years: 2, rating: 4.0, status: "Available" as const, isActive: false },
     ];
 
-    const completedPerStaff = staffSeeds.map((_, i) =>
-        SPECS.filter((s) => s.status === "Completed" && s.staff.includes(i)).length
-    );
-
     const staffIds: string[] = [];
     for (const [i, s] of staffSeeds.entries()) {
         const user = await db.orm.public.User.create({
@@ -173,7 +169,6 @@ async function main() {
             experienceYears: s.years,
             availability: faker.helpers.arrayElements(days, { min: 4, max: 6 }),
             rating: s.rating,
-            completedJobs: completedPerStaff[i],
             status: s.status,
             isActive: s.isActive,
             userId: user.id,
