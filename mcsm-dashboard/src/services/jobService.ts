@@ -1,4 +1,3 @@
-// src/services/jobService.ts
 import { db, type Tx } from "@/prisma/db";
 import { ConflictError, ForbiddenError, NotFoundError } from "@/lib/apiResponse";
 import { applyStatusChange, getBooking, listBookings, syncAssignedStatus } from "@/services/bookingService";
