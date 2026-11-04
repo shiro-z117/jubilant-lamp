@@ -10,7 +10,7 @@ import { SERVICES } from "../lib/services";
 
 faker.seed(42); // fixed seed instead of pure random for the sake of easier testing. change the seed to get different "random" values
 
-const DEMO_PASSWORD = process.env.DEMO_PASSWORD ||
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD ??
     (() => {
         throw new Error("DEMO_PASSWORD is missing from .env");
     })(); // default password for all users in the seed data; loaded from .env (cannot run without it)

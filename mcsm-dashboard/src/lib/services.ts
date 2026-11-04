@@ -1,6 +1,5 @@
 import type { Service } from "@/types/service";
-
-const CURRENCY = "$";
+import centsToUSD from "./centsToUSD";
 
 // these services are copied from the micro-clean booking site
 // we could change it to instead have service types pulled from the api and allowing admins to add, modify, and enable/disable certain service types, but that is not within the scope of this project
@@ -22,13 +21,13 @@ export function getServiceById(id: string): Service | undefined {
     return SERVICES.find((s) => s.id === id);
 }
 
-// TODO: change this to convert the cents values into dollar format (e.g. 1000 -> $10.00)
 export function formatServicePrice(service: Service): string {
     switch (service.pricingType) {
         case "fixed":
-            return `From ${CURRENCY}${service.basePrice}`;
+            // fallbacks are just to keep the compiler happy, they should never actually be used since the price data is already set right here
+            return `From ${centsToUSD(service.basePrice ?? 0)}`;
         case "hourly":
-            return `${CURRENCY}${service.basePrice} / cleaner / hour`;
+            return `${centsToUSD(service.basePrice ?? 0)} / cleaner / hour`;
         case "quote":
             return "Quotation";
     }
