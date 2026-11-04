@@ -113,7 +113,6 @@ model StatusHistory {
 
 enum QuotationStatus {
   @@type("pg/text@1")
-  Draft    = "Draft"
   Sent     = "Sent"
   Accepted = "Accepted"
   Rejected = "Rejected"

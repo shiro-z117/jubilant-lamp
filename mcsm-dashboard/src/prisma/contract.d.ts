@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a6e1c763f5129426bef2b00b91d728c5a27704a9d78deeab666876a3486bf463'>;
+  StorageHashBase<'c91d7432e0fd2c10a37871243e58a6a144c2c27c9ac714e71dd27b77cd4bcf95'>;
 export type ExecutionHash =
   ExecutionHashBase<'3c2d4275b8e74de0bb93e66d69bb9b9cca5d632d2ffa8445ddd34f79c683a39d'>;
 export type ProfileHash =
@@ -333,8 +333,8 @@ type FieldTypeOverrides = {
       };
       readonly Quotation: {
         readonly status: {
-          readonly output: 'Draft' | 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
-          readonly input: 'Draft' | 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
+          readonly output: 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
+          readonly input: 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
         };
       };
       readonly Staff: {
@@ -447,8 +447,8 @@ type ColumnTypeOverrides = {
     };
     readonly Quotation: {
       readonly status: {
-        readonly output: 'Draft' | 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
-        readonly input: 'Draft' | 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
+        readonly output: 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
+        readonly input: 'Sent' | 'Accepted' | 'Rejected' | 'Expired';
       };
     };
     readonly Staff: {
@@ -1465,7 +1465,7 @@ type ContractBase = Omit<
             };
             readonly QuotationStatus: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['Draft', 'Sent', 'Accepted', 'Rejected', 'Expired'];
+              readonly values: readonly ['Sent', 'Accepted', 'Rejected', 'Expired'];
             };
             readonly Role: {
               readonly kind: 'valueSet';
@@ -2358,7 +2358,6 @@ type ContractBase = Omit<
           readonly QuotationStatus: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Draft'; readonly value: 'Draft' },
               { readonly name: 'Sent'; readonly value: 'Sent' },
               { readonly name: 'Accepted'; readonly value: 'Accepted' },
               { readonly name: 'Rejected'; readonly value: 'Rejected' },
@@ -2420,7 +2419,6 @@ type ContractBase = Omit<
             { readonly name: 'Refunded'; readonly value: 'Refunded' },
           ];
           readonly QuotationStatus: readonly [
-            { readonly name: 'Draft'; readonly value: 'Draft' },
             { readonly name: 'Sent'; readonly value: 'Sent' },
             { readonly name: 'Accepted'; readonly value: 'Accepted' },
             { readonly name: 'Rejected'; readonly value: 'Rejected' },

@@ -186,10 +186,6 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Draft",
-                "value": "Draft"
-              },
-              {
                 "name": "Sent",
                 "value": "Sent"
               },
@@ -2030,8 +2026,8 @@
             "Quotation": {
               "checks": [
                 {
-                  "expression": "\"status\" IN ('Draft', 'Sent', 'Accepted', 'Rejected', 'Expired')",
-                  "name": "Quotation_status_check_6451d003",
+                  "expression": "\"status\" IN ('Sent', 'Accepted', 'Rejected', 'Expired')",
+                  "name": "Quotation_status_check_8efc0891",
                   "prefix": "Quotation_status_check"
                 }
               ],
@@ -2596,7 +2592,6 @@
             "QuotationStatus": {
               "kind": "valueSet",
               "values": [
-                "Draft",
                 "Sent",
                 "Accepted",
                 "Rejected",
@@ -2625,7 +2620,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a6e1c763f5129426bef2b00b91d728c5a27704a9d78deeab666876a3486bf463"
+    "storageHash": "c91d7432e0fd2c10a37871243e58a6a144c2c27c9ac714e71dd27b77cd4bcf95"
   },
   "execution": {
     "executionHash": "3c2d4275b8e74de0bb93e66d69bb9b9cca5d632d2ffa8445ddd34f79c683a39d",

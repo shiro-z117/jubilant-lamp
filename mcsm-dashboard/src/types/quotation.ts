@@ -1,4 +1,4 @@
-type QuotationStatus = "Draft" | "Sent" | "Accepted" | "Rejected" | "Expired";
+type QuotationStatus = "Sent" | "Accepted" | "Rejected" | "Expired";
 
 type QuoteServiceLine = {
     serviceId: string; // references Service.id
