@@ -10,7 +10,10 @@ import { SERVICES } from "../lib/services";
 
 faker.seed(42); // fixed seed instead of pure random for the sake of easier testing. change the seed to get different "random" values
 
-const DEMO_PASSWORD = process.env.DEMO_PASSWORD; // default password for all users in the seed data
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD ||
+    (() => {
+        throw new Error("DEMO_PASSWORD is missing from .env");
+    })(); // default password for all users in the seed data; loaded from .env (cannot run without it)
 const DAY = 24 * 60 * 60 * 1000;
 const HOUR = 60 * 60 * 1000;
 
