@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Menu, LogOut } from "lucide-react";
 import logo from "@/app/micro-clean-logo.png";
 import Sidebar from "@/components/layout/Sidebar";
+import { useRouter } from "next/navigation";
 
 type HeaderProps = {
   adminLogin: boolean;
@@ -13,6 +14,13 @@ type HeaderProps = {
 
 export default function Header({ adminLogin }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-50 flex h-header items-center gap-4 border-b border-border bg-card px-[max(5vw,1.5rem)] shadow-sm mb-8">
@@ -47,8 +55,9 @@ export default function Header({ adminLogin }: HeaderProps) {
       <div className="ml-auto mr-8 text-muted-foreground">
         Logged in as a{adminLogin ? "n Admin" : " Cleaning Staff"}
       </div>
-      {/**TODO: make the logout button functional */}
       <button
+        type="button"
+        onClick={handleLogout}
         aria-label="Log out"
         className="cursor-pointer rounded-md border-2 border-destructive p-2 text-destructive"
       >

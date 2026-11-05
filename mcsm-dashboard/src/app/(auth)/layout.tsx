@@ -1,7 +1,20 @@
-export default function AuthLayout({ children }: LayoutProps<"/">) {
+import Image from "next/image";
+import logo from "@/app/micro-clean-logo.png";
+
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <>
-      <body className="min-h-full flex flex-col">{children}</body>
-    </>
+    <main className="flex w-full flex-1 flex-col items-center justify-center gap-8 py-12">
+      <Image
+        src={logo}
+        alt="Micro Clean Cleaning Services"
+        priority
+        className="h-48 w-auto"
+      />
+      <div className="w-full max-w-md">{children}</div>
+    </main>
   );
 }

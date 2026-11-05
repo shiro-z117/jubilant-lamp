@@ -1,7 +1,7 @@
-export default function Home() {
-  return (
-    <div>
-      <main>upon success, should provide a button that brings you to /login</main>
-    </div>
-  );
+import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
+import { redirectIfAuthenticated } from "@/services/authService";
+
+export default async function ForgotPasswordPage() {
+  await redirectIfAuthenticated();
+  return <ForgotPasswordForm />;
 }
