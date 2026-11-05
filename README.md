@@ -24,4 +24,4 @@ due to scope limitations, the following data can only be added or modified via t
 
 authentication uses stateless JWTs (each valid for 7 days). this is a known security vulnerability; no plans to fix (just don't let hackers steal your jwt lol?)
 
-the forgot password page is nonfunctional, only the UI flow was requested
+the forgot password page is nonfunctional because only the UI flow was requested
