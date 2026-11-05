@@ -7,8 +7,8 @@ import { assertTransition, allowedNext } from "../src/lib/bookingStatus";
 assert.strictEqual(assertTransition("Pending", "Quoted", "admin"), null);
 assert.strictEqual(assertTransition("Assigned", "In Progress", "staff"), null);
 assert.strictEqual(assertTransition("Pending", "Cancelled", "admin"), null);
-assert.strictEqual(assertTransition("Completed", "Pending", "admin"), "Booking status changed: Completed -> Pending");
-assert.strictEqual(assertTransition("Cancelled", "Pending", "admin"), "Booking status changed: Cancelled -> Pending");
+assert.strictEqual(assertTransition("Completed", "Pending", "admin"), "Completed -> Pending");
+assert.strictEqual(assertTransition("Cancelled", "Pending", "admin"), "Cancelled -> Pending");
 assert.strictEqual(assertTransition("Quoted", "Confirmed", "system"), null);
 assert.strictEqual(assertTransition("Confirmed", "Assigned", "system"), null);
 

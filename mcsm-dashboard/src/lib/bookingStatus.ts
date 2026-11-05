@@ -65,7 +65,7 @@ function actorCan(moveType: TypeOfMove, from: Status, to: Status, actor: Actor):
 }
 
 // throws ConflictError for invalid moves, and ForbiddenError for unpermitted moves. also logs status changes
-export function assertTransition(from: Status, to: Status, actor: Actor): string | null {
+export function assertTransition(from: Status, to: Status, actor: Actor): string {
     const moveType = classifyMove(from, to);
     if (moveType === null) {
         throw new ConflictError(`A booking cannot move from ${from} to ${to}`);
@@ -74,7 +74,7 @@ export function assertTransition(from: Status, to: Status, actor: Actor): string
         throw new ForbiddenError(`You are not allowed to move a booking from ${from} to ${to}`);
     }
 
-    return moveType === "backward" || moveType === "reopen" ? `Booking status changed: ${from} -> ${to}` : null;
+    return `${from} -> ${to}`;
 }
 
 // lists the statuses this actor could move a booking to right now
