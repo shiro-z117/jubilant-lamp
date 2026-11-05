@@ -1,6 +1,6 @@
 # jubilant-lamp
 
-a next.js project
+a full-stack next.js project
 
 backend database is hosted on supabase (note: supabase automatically puts projects to sleep after about 1 week of inactivity)
 
@@ -12,3 +12,7 @@ database is setup with the following commands in sequence (prerequisite: `DATABA
 1. `npx prisma contract emit`: compiles `src/prisma/contract.prisma` into generated contract files
 2. `npx prisma db init`: creates the tables in an empty database
 3. `npm run seed`: seeds/re-seeds database with demo data (WARNING: this deletes all pre-existing data within the tables)
+
+due to scope limitations, the following data can only be added or modified via the database or seed (prisma/seed.ts):
+- customers
+- staff statuses and ratings
