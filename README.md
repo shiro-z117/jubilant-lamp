@@ -21,6 +21,7 @@ database is setup with the following commands in sequence:
 due to scope limitations, the following data can only be added or modified via the database or seed (prisma/seed.ts):
 - customers
 - staff statuses and ratings
+- anything that would move money or anything doesn't actually work because this is just a demo why would i put that in a demo
 
 authentication uses stateless JWTs (each valid for 7 days). this is a known security vulnerability; no plans to fix (just don't let hackers steal your jwt lol?)
 

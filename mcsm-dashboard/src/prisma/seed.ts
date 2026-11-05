@@ -81,7 +81,9 @@ const SPECS: Spec[] = [
     // upcoming
     { day: 2, hour: 10, customer: 0, services: ["renovation"], size: 2000, status: "Pending", staff: [] },
     { day: 5, hour: 13, customer: 1, services: ["move-in"], size: 1400, status: "Quoted", staff: [] },
-    { day: 10, hour: 9, customer: 5, services: ["basic", "sofa"], size: 1000, status: "Confirmed", staff: [], pay: "Failed", method: "Card" },
+    { day: 10, hour: 9, customer: 5, services: ["basic", "sofa"], size: 1000, status: "Quoted", staff: [], pay: "Failed", method: "Card" },
+    { day: 11, hour: 9, customer: 3, services: ["basic", "sofa"], size: 2000, status: "Quoted", staff: [], pay: "Failed", method: "Card" },
+    { day: 12, hour: 9, customer: 4, services: ["basic", "sofa"], size: 4000, status: "Quoted", staff: [], pay: "Failed", method: "Card" },
     { day: 20, hour: 11, customer: 3, services: ["other"], size: 700, status: "Rejected", staff: [] },
     { day: 50, hour: 10, customer: 0, services: ["basic"], size: 900, status: "Assigned", staff: [1, 2, 3], assignment: "Assigned", staffRequired: 2, pay: "Pending", method: "Cash" },
 ];
