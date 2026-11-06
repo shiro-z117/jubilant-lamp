@@ -23,7 +23,7 @@ export default function Header({ adminLogin }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 flex h-header items-center gap-4 border-b border-border bg-card px-[max(5vw,1.5rem)] shadow-sm mb-8">
+    <header className="sticky top-0 z-50 flex h-header items-center gap-4 border-b border-border bg-card px-[max(5vw,1.5rem)] shadow-sm">
       {adminLogin && (
         <>
           <button

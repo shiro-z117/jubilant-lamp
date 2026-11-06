@@ -33,7 +33,7 @@ export default async function StaffJobPage(
   });
 
   return (
-    <div className="flex flex-col gap-6 py-8">
+    <div className="content">
       <Link
         href="/staff/jobs"
         className="flex items-center gap-2 text-sm text-primary hover:underline"

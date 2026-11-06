@@ -18,7 +18,7 @@ export default async function StaffJobsPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6 py-8">
+    <div className="content">
       <div>
         <h1 className="text-2xl font-semibold">Today&apos;s jobs</h1>
         <p className="text-muted-foreground">{today}</p>

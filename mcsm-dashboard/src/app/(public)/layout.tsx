@@ -18,7 +18,7 @@ export default function PublicLayout({
         src={logo}
         alt="Micro Clean Cleaning Services"
         priority
-        className="h-24 w-auto"
+        className="h-48 w-auto"
       />
       <div className="w-full max-w-2xl">{children}</div>
     </main>
