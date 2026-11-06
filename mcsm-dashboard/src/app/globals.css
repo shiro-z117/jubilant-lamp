@@ -59,6 +59,7 @@ body {
 }
 
 main {
+  width: 100%;
   max-width: 73.75rem;
   margin: 0 auto;
   padding: 2rem 1.5rem 8rem;

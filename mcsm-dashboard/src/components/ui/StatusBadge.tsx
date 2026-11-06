@@ -30,6 +30,9 @@ const statusTones: Record<string, Tone> = {
   Available: "success",
   Busy: "warning",
   Offline: "neutral",
+  // user account
+  Active: "success",
+  Inactive: "neutral",
 };
 
 type StatusBadgeProps = {
