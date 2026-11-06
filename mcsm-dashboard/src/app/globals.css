@@ -21,6 +21,9 @@
   --card: #fff;
   --card-foreground: #103657;
   --header-height: 8rem;
+  --success: #15803d;
+  --warning: #b45309;
+  --info: #0369a1;
 }
 
 @theme inline {
@@ -44,6 +47,9 @@
   --color-ring: var(--ring);
   --spacing-header: var(--header-height);
   --radius-lg: var(--radius);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
 }
 
 body {
