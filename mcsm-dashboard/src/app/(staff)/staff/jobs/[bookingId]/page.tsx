@@ -45,7 +45,9 @@ export default async function StaffJobPage(
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Job {job.id}</h1>
         <div className="flex gap-2">
-          {job.myStatus && <StatusBadge status={job.myStatus} />}
+          {job.myStatus && (
+            <StatusBadge status={job.myStatus} distinguishAssigned={true} />
+          )}
           <StatusBadge status={job.status} />
         </div>
       </div>
@@ -86,7 +88,7 @@ export default async function StaffJobPage(
                   <span className="text-muted-foreground"> (you)</span>
                 )}
               </span>
-              <StatusBadge status={member.status} />
+              <StatusBadge status={member.status} distinguishAssigned={true} />
             </li>
           ))}
         </ul>

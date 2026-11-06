@@ -34,16 +34,23 @@ const statusTones: Record<string, Tone> = {
 
 type StatusBadgeProps = {
   status: string;
+  // only pass distinguishAssigned={true} if you need to distinguish between Assigned (booking) and Assigned (staff job)
+  distinguishAssigned?: boolean;
 };
 
-export default function StatusBadge({ status }: StatusBadgeProps) {
-  const tone = statusTones[status] ?? "neutral";
+export default function StatusBadge({
+  status,
+  distinguishAssigned,
+}: StatusBadgeProps) {
+  const label =
+    status === "Assigned" && distinguishAssigned ? "Pending" : status;
+  const tone = statusTones[label] ?? "neutral";
 
   return (
     <span
       className={`inline-block whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ${toneClasses[tone]}`}
     >
-      {status}
+      {label}
     </span>
   );
 }

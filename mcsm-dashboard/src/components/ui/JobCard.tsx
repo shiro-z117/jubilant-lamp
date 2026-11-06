@@ -47,7 +47,9 @@ export default function JobCard({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {job.myStatus && <StatusBadge status={job.myStatus} />}
+            {job.myStatus && (
+              <StatusBadge status={job.myStatus} distinguishAssigned={true} />
+            )}
             <StatusBadge status={job.status} />
           </div>
         </div>
