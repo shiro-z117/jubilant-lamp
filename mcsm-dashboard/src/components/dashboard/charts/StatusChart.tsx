@@ -1,8 +1,8 @@
 "use client";
 
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import BaseChart from "@/components/ui/charts/BaseChart";
-import { tooltipStyle } from "@/components/ui/charts/chartTheme";
+import BaseChart from "@/components/dashboard/charts/BaseChart";
+import { tooltipStyle } from "@/components/dashboard/charts/chartTheme";
 
 type Point = {
   status: string;

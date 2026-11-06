@@ -10,11 +10,11 @@ import Card from "@/components/ui/Card";
 import KpiCard from "@/components/ui/KpiCard";
 import centsToUSD from "@/lib/centsToUSD";
 import { requireRole } from "@/services/authService";
-import BookingsChart from "@/components/ui/charts/BookingsChart";
-import RevenueChart from "@/components/ui/charts/RevenueChart";
-import StatusChart from "@/components/ui/charts/StatusChart";
-import TopServicesChart from "@/components/ui/charts/TopServicesChart";
-import TodaysOperations from "@/components/ui/TodaysOperations";
+import BookingsChart from "@/components/dashboard/charts/BookingsChart";
+import RevenueChart from "@/components/dashboard/charts/RevenueChart";
+import StatusChart from "@/components/dashboard/charts/StatusChart";
+import TopServicesChart from "@/components/dashboard/charts/TopServicesChart";
+import TodaysOperations from "@/components/dashboard/TodaysOperations";
 import {
   getDashboardCharts,
   getDashboardKpis,

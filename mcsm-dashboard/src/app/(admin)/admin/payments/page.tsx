@@ -2,7 +2,7 @@ import Link from "next/link";
 import Card from "@/components/ui/Card";
 import Pagination from "@/components/ui/Pagination";
 import StatusBadge from "@/components/ui/StatusBadge";
-import PaymentActions from "@/components/ui/PaymentActions";
+import PaymentActions from "@/components/payments/PaymentActions";
 import centsToUSD from "@/lib/centsToUSD";
 import { cleanParams } from "@/lib/searchParams";
 import { listPaymentsSchema } from "@/schemas/payment";

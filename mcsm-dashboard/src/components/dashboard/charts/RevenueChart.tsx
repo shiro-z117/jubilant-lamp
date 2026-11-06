@@ -9,12 +9,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import BaseChart from "@/components/ui/charts/BaseChart";
+import BaseChart from "@/components/dashboard/charts/BaseChart";
 import {
   axisProps,
   gridStroke,
   tooltipStyle,
-} from "@/components/ui/charts/chartTheme";
+} from "@/components/dashboard/charts/chartTheme";
 import centsToUSD from "@/lib/centsToUSD";
 
 type Point = {

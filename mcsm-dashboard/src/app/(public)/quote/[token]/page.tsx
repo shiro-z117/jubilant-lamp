@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Card from "@/components/ui/Card";
-import QuoteActions from "@/components/quote/QuoteActions";
+import QuoteActions from "@/components/publicQuote/QuoteActions";
 import { NotFoundError } from "@/lib/apiResponse";
 import centsToUSD from "@/lib/centsToUSD";
 import { getQuoteByToken } from "@/services/quotationService";

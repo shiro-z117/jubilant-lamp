@@ -4,7 +4,7 @@ import Pagination from "@/components/ui/Pagination";
 import {
   MarkAllReadButton,
   MarkReadButton,
-} from "@/components/ui/NotificationButtons";
+} from "@/components/notifications/NotificationButtons";
 import { NOTIFICATION_LABELS } from "@/lib/notificationLabels";
 import { listNotificationsSchema } from "@/schemas/notification";
 import { requireRole } from "@/services/authService";
