@@ -150,7 +150,7 @@ async function main() {
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const staffSeeds = [
         { name: "John Smith", skills: ["basic", "mattress", "sofa"], years: 5, rating: 4.8, status: "Available" as const, isActive: true },
-        { name: "Zohran Mamdani", skills: ["deep", "renovation", "move-out"], years: 7, rating: 4.6, status: "Busy" as const, isActive: true },
+        { name: "Marker Plier", skills: ["deep", "renovation", "move-out"], years: 7, rating: 4.6, status: "Busy" as const, isActive: true },
         { name: `${faker.person.firstName()} ${faker.person.lastName()}`, skills: ["basic", "deep", "office"], years: 3, rating: 4.5, status: "Assigned" as const, isActive: true },
         { name: `${faker.person.firstName()} ${faker.person.lastName()}`, skills: ["move-in", "move-out", "other"], years: 4, rating: 4.2, status: "Offline" as const, isActive: true },
         { name: `${faker.person.firstName()} ${faker.person.lastName()}`, skills: ["sofa", "mattress", "basic"], years: 2, rating: 4.0, status: "Available" as const, isActive: false },

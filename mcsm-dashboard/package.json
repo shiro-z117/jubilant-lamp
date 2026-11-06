@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "contract:emit": "prisma contract emit",
-    "seed": "tsx src/prisma/seed.ts"
+    "seed": "node --conditions=react-server --import tsx src/prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/orm-postgres": "^8.0.0-rc.21",
