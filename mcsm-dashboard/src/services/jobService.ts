@@ -1,10 +1,11 @@
 import { db, type Tx } from "@/prisma/db";
 import { ConflictError, ForbiddenError, NotFoundError } from "@/lib/apiResponse";
-import { applyStatusChange, getBooking, listBookings, syncAssignedStatus } from "@/services/bookingService";
+import { applyStatusChange, getBooking, syncAssignedStatus } from "@/services/bookingService";
 import { notifyAdmins } from "@/services/notificationService";
 import type { Session } from "@/services/authService";
 import { getServiceById } from "@/lib/services";
 import { nameOf } from "@/lib/serviceHelpers";
+import { and } from "@prisma/orm-postgres/orm-client";
 
 // every function here is for staff only; returns the caller's Staff id
 function requireStaff(session: Session): string {
@@ -30,7 +31,10 @@ function assertOpen(status: string) {
 
 // #region READ OPERATIONS
 
-// today's jobs for the logged-in staff member in chronological order
+const CLOSED = ["Completed", "Cancelled", "Rejected"];
+const HISTORY_LIMIT = 20;
+
+// every job this staff member is on, grouped for the jobs page
 export async function listMyJobs(session: Session) {
     const staffId = requireStaff(session);
 
@@ -39,27 +43,55 @@ export async function listMyJobs(session: Session) {
     const end = new Date();
     end.setHours(23, 59, 59, 999);
 
-    // listBookings already limits staff to their own bookings and hides ones they rejected
-    const { items } = await listBookings({ startDate: start, endDate: end, page: 1, limit: 100 }, session);
+    const bookings = await db.orm.public.Booking
+        .where((b) => b.assignments.some((a) => and(a.staffId.eq(staffId), a.status.neq("Rejected"))))
+        .orderBy((b) => b.scheduledAt.asc())
+        .include("customer")
+        .include("assignments")
+        .all();
 
-    return items
-        .filter((b) => b.status !== "Cancelled")
-        .sort((a, b) => a.scheduledAt.getTime() - b.scheduledAt.getTime())
-        .map((b) => ({
-            id: b.id,
-            scheduledAt: b.scheduledAt,
-            status: b.status,
-            address: b.address,
-            customerName: b.customer.name,
-            services: b.serviceIds.flatMap((id) => getServiceById(id) ?? []),
-            myStatus: b.assignments.find((a) => a.staffId === staffId)?.status, // drives the accept/reject/start buttons
-        }));
+    const jobs = bookings.map((b) => ({
+        id: b.id,
+        scheduledAt: b.scheduledAt,
+        status: b.status,
+        address: b.address,
+        customerName: b.customer.name,
+        services: b.serviceIds.flatMap((id) => getServiceById(id) ?? []),
+        myStatus: b.assignments.find((a) => a.staffId === staffId)?.status, // drives the accept/reject/start buttons
+    }));
+    type Job = (typeof jobs)[number];
+
+    const isToday = (j: Job) => j.scheduledAt >= start && j.scheduledAt <= end;
+    const open = jobs.filter((j) => !CLOSED.includes(j.status));
+    const closed = jobs.filter((j) => CLOSED.includes(j.status));
+    const later = open.filter((j) => !isToday(j));
+
+    return {
+        today: open.filter(isToday),
+        needsResponse: later.filter((j) => j.myStatus === "Assigned"),
+        upcoming: later.filter((j) => j.myStatus !== "Assigned"),
+        history: [...closed].reverse().slice(0, HISTORY_LIMIT),
+        completedTotal: closed.filter(
+            (j) => j.status === "Completed" && (j.myStatus === "Accepted" || j.myStatus === "On the Way")
+        ).length,
+    };
 }
 
-// gives only what the staff member needs
 export async function getMyJob(bookingId: string, session: Session) {
     const staffId = requireStaff(session);
     const booking = await getBooking(bookingId, session); // throws if it isn't theirs or they rejected it
+
+    // everyone on the job, pending assignments included, rejected ones left out
+    const live = booking.assignments.filter((a) => a.status !== "Rejected");
+    const staffRows = await db.orm.public.Staff.where((s) => s.id.in(live.map((a) => a.staffId))).include("user").all();
+    const team = live
+        .map((a) => ({
+            staffId: a.staffId,
+            name: staffRows.find((s) => s.id === a.staffId)?.user.name ?? "Unknown",
+            status: a.status,
+            isMe: a.staffId === staffId,
+        }))
+        .sort((a, b) => Number(b.isMe) - Number(a.isMe) || a.name.localeCompare(b.name));
 
     return {
         id: booking.id,
@@ -73,6 +105,7 @@ export async function getMyJob(bookingId: string, session: Session) {
         services: booking.services,
         customer: { name: booking.customer.name, phone: booking.customer.phone },
         myStatus: booking.assignments.find((a) => a.staffId === staffId)?.status,
+        team,
     };
 }
 

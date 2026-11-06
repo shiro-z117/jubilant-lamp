@@ -39,7 +39,7 @@ export default async function StaffJobPage(
         className="flex items-center gap-2 text-sm text-primary hover:underline"
       >
         <ArrowLeft size={16} aria-hidden="true" />
-        Back to today&apos;s jobs
+        Back to my jobs
       </Link>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -71,6 +71,25 @@ export default async function StaffJobPage(
           <dt className="text-muted-foreground">Special notes</dt>
           <dd>{job.specialNotes ?? "None"}</dd>
         </dl>
+      </Card>
+
+      <Card title="Team">
+        <ul className="flex flex-col gap-2">
+          {job.team.map((member) => (
+            <li
+              key={member.staffId}
+              className="flex items-center justify-between gap-3"
+            >
+              <span>
+                {member.name}
+                {member.isMe && (
+                  <span className="text-muted-foreground"> (you)</span>
+                )}
+              </span>
+              <StatusBadge status={member.status} />
+            </li>
+          ))}
+        </ul>
       </Card>
 
       <Card title="Actions">
