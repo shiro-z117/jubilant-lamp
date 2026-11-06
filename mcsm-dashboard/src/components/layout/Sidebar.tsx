@@ -17,7 +17,6 @@ import {
 const links = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
-  { href: "/admin/quotations", label: "Quotations", icon: FileText },
   { href: "/admin/staff", label: "Staff", icon: Users },
   { href: "/admin/customers", label: "Customers", icon: UserRound },
   { href: "/admin/payments", label: "Payments", icon: CreditCard },
