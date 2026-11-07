@@ -1,5 +1,6 @@
 import StatusBadge from "@/components/ui/StatusBadge";
 import type { getTodaysOperations } from "@/services/dashboardService";
+import Link from "next/link";
 
 type Operations = Awaited<ReturnType<typeof getTodaysOperations>>;
 
@@ -23,6 +24,9 @@ export default function TodaysOperations({
         <thead>
           <tr className="border-b border-border text-sm text-muted-foreground">
             <th scope="col" className="py-2 pr-4 font-medium">
+              Booking
+            </th>
+            <th scope="col" className="py-2 pr-4 font-medium">
               Time
             </th>
             <th scope="col" className="py-2 pr-4 font-medium">
@@ -42,6 +46,14 @@ export default function TodaysOperations({
         <tbody>
           {operations.map((op) => (
             <tr key={op.id} className="border-b border-border last:border-0">
+              <td className="py-3 pr-4 whitespace-nowrap">
+                <Link
+                  href={`/admin/bookings/${op.id}`}
+                  className="font-medium text-primary hover:underline"
+                >
+                  {op.id}
+                </Link>
+              </td>
               <td className="py-3 pr-4 whitespace-nowrap">
                 {time(op.scheduledAt)}
               </td>
