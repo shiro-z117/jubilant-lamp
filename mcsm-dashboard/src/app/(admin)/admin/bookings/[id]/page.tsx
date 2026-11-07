@@ -13,6 +13,11 @@ import { getQuotation } from "@/services/quotationService";
 import { listStaff } from "@/services/staffService";
 import BookingActions from "@/components/bookings/BookingActions";
 import { allowedNext } from "@/lib/bookingStatus";
+import StaffAssignments from "@/components/bookings/StaffAssignments";
+import { getServiceById } from "@/lib/services";
+import CopyQuoteLink from "@/components/quote/CopyQuoteLink";
+import QuoteForm from "@/components/quote/QuoteForm";
+import { formatServicePrice } from "@/lib/services";
 
 const dateTime = (d: Date) =>
   d.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
@@ -40,7 +45,30 @@ export default async function BookingDetailPage(
     listStaff({ page: 1, limit: 100 }, session),
     Promise.all(quoteRows.map((q) => getQuotation(q.id, session))),
   ]);
+  const hasAccepted = quotations.some((q) => q.status === "Accepted");
+  const hasLive = quotations.some((q) => q.status === "Sent");
+  const canQuote =
+    (booking.status === "Pending" || booking.status === "Quoted") &&
+    !hasAccepted &&
+    !hasLive;
   const staffNames = new Map(staff.items.map((s) => [s.id, s.name]));
+  const activeStaff = staff.items.filter((s) => s.isActive);
+  const candidates = activeStaff
+    .filter(
+      (s) =>
+        !booking.assignments.some(
+          (a) => a.staffId === s.id && a.status !== "Rejected",
+        ),
+    )
+    .map((s) => ({
+      id: s.id,
+      name: s.name,
+      skills: s.skills
+        .flatMap((id) => getServiceById(id)?.title ?? [])
+        .join(", "),
+    }));
+  const canManageStaff =
+    booking.status === "Confirmed" || booking.status === "Assigned";
 
   const accepted = booking.assignments.filter(
     (a) => a.status === "Accepted" || a.status === "On the Way",
@@ -113,37 +141,48 @@ export default async function BookingDetailPage(
       </Card>
 
       <Card title="Staff">
-        <p className="mb-4">
-          <span className="text-muted-foreground">Staff required: </span>
-          <span className="font-medium">{booking.staffRequired}</span>
-          <span className="text-muted-foreground"> · Accepted: </span>
-          <span className="font-medium">
-            {accepted} of {booking.staffRequired}
-          </span>
-        </p>
-        {booking.assignments.length === 0 ? (
-          <p className="text-muted-foreground">No staff are assigned yet.</p>
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {booking.assignments.map((a) => (
-              <li
-                key={a.staffId}
-                className="flex items-center justify-between gap-3"
-              >
-                <Link
-                  href={`/admin/staff/${a.staffId}`}
-                  className="text-primary hover:underline"
-                >
-                  {staffNames.get(a.staffId) ?? "Unknown"}
-                </Link>
-                <StatusBadge status={a.status} distinguishAssigned />
-              </li>
-            ))}
-          </ul>
-        )}
+        <StaffAssignments
+          bookingId={booking.id}
+          bookingStatus={booking.status}
+          staffRequired={booking.staffRequired}
+          accepted={accepted}
+          assignments={booking.assignments.map((a) => ({
+            staffId: a.staffId,
+            name: staffNames.get(a.staffId) ?? "Unknown",
+            status: a.status,
+          }))}
+          candidates={candidates}
+          canManage={canManageStaff}
+          canChangeRequired={canReschedule}
+          activeStaffCount={activeStaff.length}
+        />
       </Card>
 
       <Card title="Quotations">
+        {canQuote && (
+          <div className="mb-6">
+            <QuoteForm
+              bookingId={booking.id}
+              propertySize={booking.propertySize}
+              revised={quotations.length > 0}
+              services={booking.services.map((s) => ({
+                serviceId: s.id,
+                title: s.title,
+                suggested:
+                  s.pricingType === "fixed" && s.basePrice !== null
+                    ? (s.basePrice / 100).toFixed(2)
+                    : "",
+                catalog: formatServicePrice(s),
+              }))}
+            />
+          </div>
+        )}
+        {hasLive && (
+          <p role="status" className="mb-6 text-sm text-muted-foreground">
+            A quote is waiting for the customer&apos;s answer. A new one can be
+            created if it expires.
+          </p>
+        )}
         {quotations.length === 0 ? (
           <p className="text-muted-foreground">
             No quotation has been created for this booking.
@@ -176,7 +215,7 @@ export default async function BookingDetailPage(
                     {q.notes}
                   </p>
                 )}
-
+                {q.status === "Sent" && <CopyQuoteLink token={q.token} />}
                 {q.status === "Accepted" && (
                   <p className="mt-3 text-sm">
                     <span className="text-muted-foreground">Payment: </span>
