@@ -6,6 +6,7 @@ import type { ApiResponse } from "@/lib/apiResponse";
 
 type Action = "accept" | "reject";
 
+// public quote form
 export default function QuoteActions({ token }: { token: string }) {
   const router = useRouter();
   const [busy, setBusy] = useState<Action | null>(null);
