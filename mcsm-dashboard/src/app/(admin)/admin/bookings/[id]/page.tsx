@@ -18,6 +18,7 @@ import { getServiceById } from "@/lib/services";
 import CopyQuoteLink from "@/components/quote/CopyQuoteLink";
 import QuoteForm from "@/components/quote/QuoteForm";
 import { formatServicePrice } from "@/lib/services";
+import OpenPayment from "@/components/bookings/OpenPayment";
 
 const dateTime = (d: Date) =>
   d.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
@@ -69,7 +70,6 @@ export default async function BookingDetailPage(
     }));
   const canManageStaff =
     booking.status === "Confirmed" || booking.status === "Assigned";
-
   const accepted = booking.assignments.filter(
     (a) => a.status === "Accepted" || a.status === "On the Way",
   ).length;
@@ -81,6 +81,21 @@ export default async function BookingDetailPage(
   const canReschedule = ["Pending", "Quoted", "Confirmed", "Assigned"].includes(
     booking.status,
   );
+  const acceptedQuote = quotations.find((q) => q.status === "Accepted");
+  const activePayment = payments.find(
+    (p) => p.status === "Pending" || p.status === "Paid",
+  );
+  const closedBooking =
+    booking.status === "Cancelled" || booking.status === "Rejected";
+  const paymentBlock = closedBooking
+    ? `A ${booking.status.toLowerCase()} booking cannot take payments.`
+    : !acceptedQuote
+      ? "A payment can be opened once the customer accepts a quote."
+      : activePayment?.status === "Paid"
+        ? "This booking has been paid."
+        : activePayment
+          ? "A payment is pending. Mark it as paid from the payments page."
+          : null;
 
   return (
     <div className="flex flex-col gap-6 py-8">
@@ -236,6 +251,26 @@ export default async function BookingDetailPage(
       </Card>
 
       <Card title="Payments">
+        {paymentBlock === null && acceptedQuote ? (
+          <div className="mb-6">
+            <OpenPayment
+              bookingId={booking.id}
+              amount={acceptedQuote.breakdown.total}
+            />
+          </div>
+        ) : (
+          <p className="mb-6 text-sm text-muted-foreground">{paymentBlock}</p>
+        )}
+        {payments.length > 0 && (
+          <p className="mb-4 text-sm">
+            <Link
+              href={`/admin/payments?search=${booking.id}`}
+              className="text-primary hover:underline"
+            >
+              Process or refund on the payments page
+            </Link>
+          </p>
+        )}
         {payments.length === 0 ? (
           <p className="text-muted-foreground">No payments yet.</p>
         ) : (

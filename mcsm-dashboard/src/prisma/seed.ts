@@ -215,14 +215,14 @@ async function main() {
         };
         const staffName = spec.staff.length ? staffSeeds[spec.staff[0]].name : "Admin";
         const changedBy: Record<BStatus, string> = {
-            Pending: "Admin",
+            Pending: "System",
             Quoted: "Admin",
             Confirmed: "System",
             Assigned: "System",
             "In Progress": staffName,
             Completed: staffName,
             Cancelled: "Admin",
-            Rejected: "System",
+            Rejected: "Admin",
         };
 
         await db.orm.public.Booking.create({
