@@ -106,7 +106,7 @@ export default async function CustomerDetailPage(
         className="flex items-center gap-2 text-sm text-primary hover:underline"
       >
         <ArrowLeft size={16} aria-hidden="true" />
-        Back to customers
+        Customers
       </Link>
 
       <h1 className="text-2xl font-semibold">{customer.name}</h1>
